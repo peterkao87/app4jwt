@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>sign in</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#login").click(function(){
+        const d_username = document.getElementById('username').value
+        const d_password = document.getElementById('password').value
+        const jsonUserData = {username: d_username, password: d_password}    
+        const strJsonUserData = JSON.stringify(jsonUserData)   // for network 
+
+        $.ajax({
+                url: '/login', 
+                type: 'POST', 
+                contentType: 'application/json', 
+                data:strJsonUserData,
+                success: function(response){
+                             var token = response['token']
+                             $('#msg').append(token + '<br />')
+                             // add the token in session storage
+                             sessionStorage.setItem('jwt', token)
+                             var jwt = sessionStorage.getItem('jwt')
+                             alert('jwt from sessionlStorage = ' + jwt)    
+                          },
+                error: function(xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status)
+                            alert(thrownError)
+                          }
+            })
+        $(this).blur()
+    })
+
+})
+</script>
+</head>
+<body>
+
+<h1>log in page</h1>
+<p>after login, you can ...</p>
+<button id='login'>login</button>
+<p id='msg'>the msg is </p>
+
+<pre>
+    test note: the data in db has only one user
+    username:  wiwi
+    password:  iwiw
+</pre>
+<br />
+user name:<br />
+<input type="text" id="username"><br />
+password:<br />
+<input type="text" id="password"><br />
+
+</body>
+</html>

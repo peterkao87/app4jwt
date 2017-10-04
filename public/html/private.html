@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>private</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#private").click(function(){
+        //get the token from session storage
+        const jwt = sessionStorage.getItem('jwt')
+        alert('jwt from sessionlStorage = ' + jwt)   
+
+        const token = {token: jwt}               // json data
+        const strToken = JSON.stringify(token)   // for network
+
+        $.ajax({
+                url: '/private', 
+                type: 'POST', 
+                contentType: 'application/json', 
+                data:strToken,
+                success: function(response){
+                            // get and rendering data from private route
+                            var message = response['message']
+                             $('#msg').append(message + '<br />')
+                          },
+                error: function(xhr, ajaxOptions, thrownError) {
+                            alert(xhr.status)
+                            alert(thrownError)
+                          }
+            })
+        $(this).blur()
+    })
+
+})
+</script>
+</head>
+<body>
+
+<h1>private page</h1>
+<p>auth is needed to access this page</p>
+<button id='private'>get private data</button>
+<p id='msg'>data:  </p>
+
+</body>
+</html>
